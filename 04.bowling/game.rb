@@ -14,15 +14,15 @@ class Game
   def score
     fallen_pins_sum = @shots.sum(&:fallen_pins)
 
-    shot_index = 0
+    next_shot_index = 0
     bonus_excluding_last_frame = @frames[0...-1].sum do |frame|
-      shot_index += frame.shots.size
+      next_shot_index += frame.shots.size
       add_frames_num =
         if frame.strike? then 2
         elsif frame.spare? then 1
         else 0
         end
-      @shots[shot_index, add_frames_num].sum(&:fallen_pins)
+      @shots[next_shot_index, add_frames_num].sum(&:fallen_pins)
     end
 
     fallen_pins_sum + bonus_excluding_last_frame
