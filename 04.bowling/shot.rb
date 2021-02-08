@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Shot
-  attr_reader :fallen_pins
+  attr_accessor :fallen_pins
 
   def initialize(score_char)
     @fallen_pins = char_to_fallen_pins(score_char)
