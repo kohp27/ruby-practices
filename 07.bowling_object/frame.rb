@@ -3,7 +3,7 @@
 require_relative 'shot'
 
 class Frame
-  attr_accessor :shots
+  attr_reader :shots
 
   def initialize(shots = [])
     @shots = shots

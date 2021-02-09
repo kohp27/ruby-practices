@@ -4,8 +4,6 @@ require_relative 'shot'
 require_relative 'frame'
 
 class Game
-  attr_reader :frames
-
   def initialize(score_str)
     @shots = parse_score_str(score_str)
     @frames = create_frames(@shots)
@@ -40,8 +38,11 @@ class Game
         before_frame = frames.last
         should_create_new_frame = before_frame.nil? || before_frame.strike? || before_frame.shots.size == 2
 
-        frames << Frame.new([]) if should_create_new_frame
-        frames.last.shots << shot
+        if should_create_new_frame
+          frames << Frame.new([shot])
+        else
+          frames[-1] = Frame.new([*before_frame.shots, shot])
+        end
       else
         frames << Frame.new(shots[i..-1])
         break frames
