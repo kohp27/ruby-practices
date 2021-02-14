@@ -15,12 +15,12 @@ class Game
     next_shot_index = 0
     bonus_excluding_last_frame = @frames[0...-1].sum do |frame|
       next_shot_index += frame.shots.size
-      add_frames_num =
+      add_frames_count =
         if frame.strike? then 2
         elsif frame.spare? then 1
         else 0
         end
-      @shots[next_shot_index, add_frames_num].sum(&:fallen_pins)
+      @shots[next_shot_index, add_frames_count].sum(&:fallen_pins)
     end
 
     fallen_pins_sum + bonus_excluding_last_frame
@@ -35,13 +35,13 @@ class Game
   def create_frames(shots)
     shots.each_with_object([]).with_index do |(shot, frames), i|
       if frames.size < 9
-        before_frame = frames.last
-        should_create_new_frame = before_frame.nil? || before_frame.strike? || before_frame.shots.size == 2
+        prev_frame = frames.last
+        should_create_new_frame = prev_frame.nil? || prev_frame.strike? || prev_frame.shots.size == 2
 
         if should_create_new_frame
           frames << Frame.new([shot])
         else
-          frames[-1] = Frame.new([*before_frame.shots, shot])
+          frames[-1] = Frame.new([*prev_frame.shots, shot])
         end
       else
         frames << Frame.new(shots[i..-1])
