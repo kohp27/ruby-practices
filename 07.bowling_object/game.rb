@@ -13,7 +13,7 @@ class Game
     fallen_pins_sum = @shots.sum(&:fallen_pins)
 
     next_shot_index = 0
-    bonus_excluding_last_frame = @frames[0...-1].sum do |frame|
+    bonus_excluding_last_frame = @frames[0..-2].sum do |frame|
       next_shot_index += frame.shots.size
       add_frames_count =
         if frame.strike? then 2
