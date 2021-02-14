@@ -10,20 +10,7 @@ class Game
   end
 
   def score
-    fallen_pins_sum = @shots.sum(&:fallen_pins)
-
-    next_shot_index = 0
-    bonus_excluding_last_frame = @frames[0..-2].sum do |frame|
-      next_shot_index += frame.shots.size
-      add_frames_count =
-        if frame.strike? then 2
-        elsif frame.spare? then 1
-        else 0
-        end
-      @shots[next_shot_index, add_frames_count].sum(&:fallen_pins)
-    end
-
-    fallen_pins_sum + bonus_excluding_last_frame
+    fallen_pins_subtotal + bonus_excluding_final_frame
   end
 
   private
@@ -47,6 +34,23 @@ class Game
         frames << Frame.new(shots[i..-1])
         break frames
       end
+    end
+  end
+
+  def fallen_pins_subtotal
+    @shots.sum(&:fallen_pins)
+  end
+
+  def bonus_excluding_final_frame
+    next_shot_index = 0
+    bonus_excluding_last_frame = @frames[0..-2].sum do |frame|
+      next_shot_index += frame.shots.size
+      add_frames_count =
+        if frame.strike? then 2
+        elsif frame.spare? then 1
+        else 0
+        end
+      @shots[next_shot_index, add_frames_count].sum(&:fallen_pins)
     end
   end
 end
