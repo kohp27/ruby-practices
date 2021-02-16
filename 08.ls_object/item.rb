@@ -3,9 +3,15 @@
 require 'etc'
 
 class Item
-  def initialize(input_path, dir)
-    @path = File.join(dir, input_path)
+  def initialize(item_path, dir, is_path_file)
+    @item_path = item_path
+    @is_path_file = is_path_file
+    @path = File.join(dir, item_path)
     @lstat = File.lstat(@path)
+  end
+
+  def item_name
+    @is_path_file ? @item_path : File.basename(@path)
   end
 
   def filetype
@@ -51,16 +57,12 @@ class Item
     time.strftime(time_format)
   end
 
-  def filename
-    File.basename(@path)
-  end
-
   def name_with_link_destination
     if @lstat.ftype == 'link'
       link_destination = File.readlink(@path)
-      "#{filename} -> #{link_destination}"
+      "#{item_name} -> #{link_destination}"
     else
-      filename
+      item_name
     end
   end
 end

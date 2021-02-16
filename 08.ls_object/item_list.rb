@@ -8,12 +8,13 @@ class ItemList
     @dotfiles = dotfiles
     @long = long
     @reverse = reverse
+    @is_path_file = File.file?(path)
 
     @item_list =
-      if File.file?(path)
-        [path].map { |filename| Item.new(filename, '.') }
+      if @is_path_file
+        [path].map { |filename| Item.new(filename, '.', true) }
       else
-        Dir.entries(path).sort.map { |filename| Item.new(filename, path) }
+        Dir.entries(path).sort.map { |filename| Item.new(filename, path, false) }
       end
   end
 
@@ -31,7 +32,7 @@ class ItemList
   private
 
   def items_dotfiles_remove
-    @item_list.filter! { |item| item.filename[0] != '.' }
+    @item_list.filter! { |item| item.item_name[0] != '.' }
   end
 
   def items_reverse
@@ -41,11 +42,11 @@ class ItemList
   TAB_SIZE = 8
   def display_short(display_width)
     items_cnt = @item_list.size
-    item_width = TAB_SIZE * (item_properties_widthes(:filename) / TAB_SIZE.to_f).ceil
+    item_width = TAB_SIZE * (item_properties_widthes(:item_name) / TAB_SIZE.to_f).ceil
     max_columns_cnt = display_width / item_width
     rows_cnt = (items_cnt / max_columns_cnt.to_f).ceil
 
-    adjusted_item_names = @item_list.map(&:filename).map do |name|
+    adjusted_item_names = @item_list.map(&:item_name).map do |name|
       tabs_cnt = ((item_width - name.length) / TAB_SIZE.to_f).ceil
       "#{name}#{"\t" * tabs_cnt}"
     end
@@ -53,6 +54,7 @@ class ItemList
     item_matrix = adjusted_item_names.each_slice(rows_cnt)
                                      .map { |names| names.values_at(0...rows_cnt) }
                                      .transpose
+
     puts(item_matrix.map { |names| names.join.rstrip })
   end
 
@@ -67,7 +69,9 @@ class ItemList
       "#{item.updated_date} " \
       "#{item.name_with_link_destination}"
     end
-    puts [total_block_line, *item_details]
+
+    puts total_block_line unless @is_path_file
+    puts item_details
   end
 
   CALC_WIDTH_PROPERTIED = %i[nlink user group size].freeze
