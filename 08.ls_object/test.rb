@@ -2,10 +2,9 @@
 
 require 'minitest/autorun'
 require 'stringio'
-require_relative 'item'
 require_relative 'item_list'
 
-class ItemTest < Minitest::Test
+class LsTest < Minitest::Test
   DIR_PATH = 'fixture'
   FILE_PATH = 'fixture/dammy'
 
