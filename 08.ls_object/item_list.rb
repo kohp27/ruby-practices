@@ -12,7 +12,7 @@ class ItemList
 
     @item_list =
       if @is_path_file
-        [path].map { |filename| Item.new(filename, '.', true) }
+        [Item.new(path, '.', true)]
       else
         Dir.entries(path).sort.map { |filename| Item.new(filename, path, false) }
       end
