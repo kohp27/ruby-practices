@@ -74,7 +74,6 @@ class ItemList
     puts item_details
   end
 
-  CALC_WIDTH_PROPERTIED = %i[nlink user group size].freeze
   def item_properties_widthes(property)
     @item_list.map { |item| item.send(property).to_s.length }.max
   end
