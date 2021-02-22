@@ -58,19 +58,23 @@ class ItemList
     puts(item_matrix.map { |names| names.join.rstrip })
   end
 
+  LONG_OPTION_PROPERTIES = %i[nlink user group size].freeze
   def display_long
-    total_block_line = "total #{@item_list.map(&:blocks).sum}"
+    item_widths = LONG_OPTION_PROPERTIES.each_with_object({}) do |property, hash|
+      hash[property] = item_properties_widths(property)
+    end
+
     item_details = @item_list.map do |item|
       "#{item.filetype}#{item.permissions}  " \
-      "#{item.nlink.to_s.rjust(item_properties_widths(:nlink))} " \
-      "#{item.user.ljust(item_properties_widths(:user))}  " \
-      "#{item.group.ljust(item_properties_widths(:group))}  " \
-      "#{item.size.to_s.rjust(item_properties_widths(:size))} " \
+      "#{item.nlink.to_s.rjust(item_widths[:nlink])} " \
+      "#{item.user.ljust(item_widths[:user])}  " \
+      "#{item.group.ljust(item_widths[:group])}  " \
+      "#{item.size.to_s.rjust(item_widths[:size])} " \
       "#{item.updated_date} " \
       "#{item.name_with_link_destination}"
     end
 
-    puts total_block_line unless @is_path_file
+    puts "total #{@item_list.map(&:blocks).sum}" unless @is_path_file
     puts item_details
   end
 
