@@ -26,10 +26,6 @@ class ItemList
 
   private
 
-  def item_properties_widthes(property)
-    @item_list.map { |item| item.send(property).to_s.length }.max
-  end
-
   ITEM_WIDTH_BASE = 8
   def create_line(values, name)
     columns = values.map.with_index do |value, i|
