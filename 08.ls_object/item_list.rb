@@ -42,7 +42,7 @@ class ItemList
   TAB_SIZE = 8
   def display_short(display_width)
     items_cnt = @item_list.size
-    item_width = TAB_SIZE * (item_properties_widthes(:item_name) / TAB_SIZE.to_f).ceil
+    item_width = TAB_SIZE * (item_properties_widths(:item_name) / TAB_SIZE.to_f).ceil
     max_columns_cnt = display_width / item_width
     rows_cnt = (items_cnt / max_columns_cnt.to_f).ceil
 
@@ -62,10 +62,10 @@ class ItemList
     total_block_line = "total #{@item_list.map(&:blocks).sum}"
     item_details = @item_list.map do |item|
       "#{item.filetype}#{item.permissions}  " \
-      "#{item.nlink.to_s.rjust(item_properties_widthes(:nlink))} " \
-      "#{item.user.ljust(item_properties_widthes(:user))}  " \
-      "#{item.group.ljust(item_properties_widthes(:group))}  " \
-      "#{item.size.to_s.rjust(item_properties_widthes(:size))} " \
+      "#{item.nlink.to_s.rjust(item_properties_widths(:nlink))} " \
+      "#{item.user.ljust(item_properties_widths(:user))}  " \
+      "#{item.group.ljust(item_properties_widths(:group))}  " \
+      "#{item.size.to_s.rjust(item_properties_widths(:size))} " \
       "#{item.updated_date} " \
       "#{item.name_with_link_destination}"
     end
@@ -74,7 +74,7 @@ class ItemList
     puts item_details
   end
 
-  def item_properties_widthes(property)
+  def item_properties_widths(property)
     @item_list.map { |item| item.send(property).to_s.length }.max
   end
 end
